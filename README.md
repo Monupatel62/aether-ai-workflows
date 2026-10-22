@@ -30,6 +30,7 @@ aether-ai-orchestration, aether-ai-agents, aether-ai-queue, aether-ai-database.
 - [Implementation plan and acceptance criteria](docs/IMPLEMENTATION_PLAN.md)
 - [Research and license notes](docs/RESEARCH_AND_LICENSES.md)
 - [Repository-specific technical design and test plan](docs/TECHNICAL_DESIGN.md)
+- [Repository-specific security review checklist](docs/SECURITY_REVIEW.md)
 - [Engineering and commenting standard](docs/ENGINEERING_STANDARD.md)
 - [Work log and decisions](docs/WORKLOG.md)
 - [Master 33-repository catalog](https://github.com/Monupatel62/aether-ai-platform/blob/main/docs/REPOSITORY_CATALOG.md)
