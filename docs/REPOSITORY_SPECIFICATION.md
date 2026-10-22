@@ -1,6 +1,6 @@
 # Repository specification: aether-ai-workflows
 
-**Status:** Documentation baseline copied from the Aether AI master specification. Implementation status must be verified separately.
+**Status:** Repository exists; documentation-only on the inspected `main` branch. No application implementation is present in the audited tree.
 
 ## Mission
 
@@ -12,7 +12,7 @@ Owns workflow shape/validation, not durable scheduling or step execution.
 
 ## Dependencies and connections
 
-No runtime dependency on orchestration, agents, or database. This repository owns versioned workflow schema/types and pure validation. Orchestration consumes the public workflow contract; agent step types are represented by stable identifiers/schemas rather than imports of the agent runtime. Any minimal shared schema utility requires a separate reviewed edge.
+Versioned workflow schemas and validation contract; optional shared schema utility only. No runtime dependency on orchestration, agents, or database.
 
 ## Owned capabilities
 
