@@ -8,11 +8,11 @@ Versioned workflow definition schema and validation errors
 
 ## Direct dependencies
 
-orchestration, agents, database.
+No runtime dependency on orchestration, agents, or database. Expose a versioned workflow schema and validation contract that orchestration consumes.
 
 ## Required rules
 
-Schema includes version, nodes/steps, input/output types, dependency edges, timeout/retry policy, approval gates, secret references, and cycle detection.
+Schema includes version, nodes/steps, input/output types, dependency edges, timeout/retry policy, approval gates, secret references, and cycle detection. Workflow definitions describe execution but do not schedule steps, execute agents, or access persistence.
 
 ## Contract governance
 
