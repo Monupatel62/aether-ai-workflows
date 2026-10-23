@@ -10,7 +10,7 @@ const validWorkflow: WorkflowDefinitionV1 = {
   inputSchema: { type: "object" },
   nodes: [
     { id: "start", kind: "transform", timeoutMs: 1000, maxAttempts: 1 },
-    { id: "finish", kind: "agent", timeoutMs: 5000, maxAttempts: 2, secretRefs: ["provider/mock"] }
+    { id: "finish", kind: "agent", timeoutMs: 5000, maxAttempts: 2, secretRefs: ["secret://provider/mock"] }
   ],
   edges: [{ from: "start", to: "finish" }]
 };
