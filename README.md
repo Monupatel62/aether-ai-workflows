@@ -1,39 +1,37 @@
-# aether-ai-workflows
+# @aether-ai/workflows
 
-> **Status: Documentation phase.** No application code or production deployment has been started in this repository.
+Versioned declarative workflow types and static graph validation for Aether AI. This package validates definitions; it does not schedule jobs, execute agents/tools, or persist durable run state.
 
-## Purpose
+## Status
 
-Declarative multi-step workflow definitions, validation, versioning, scheduling hooks, and run state.
+Initial schema/graph validator in review. The workflow contract is a proposal and must be reviewed with orchestration before it is treated as stable. Schema version 1 supports acyclic graphs; loops and retries at runtime belong to orchestration policy, not graph cycles.
 
-## Responsibility boundary
+## Current validation
 
-Defines workflow graphs; delegates execution to orchestration and agents.
+- Definition ID/version and schema version.
+- Unique node IDs, valid entry node, and valid edge endpoints.
+- Duplicate/self edges and graph-cycle rejection.
+- Bounded node count, definition size, per-node timeout, and attempt count.
+- Secret references use an explicit `secret://` identifier form; literal credentials must never be embedded.
 
-## Dependencies
+## Example
 
-aether-ai-orchestration, aether-ai-agents, aether-ai-queue, aether-ai-database.
+```ts
+import { validateWorkflow } from "@aether-ai/workflows";
 
-## Project rules
+const issues = validateWorkflow(workflowDefinition);
+if (issues.length) throw new Error(`Invalid workflow: ${issues.map(x => x.code).join(", ")}`);
+```
 
-- No implementation starts until the documentation and cross-repository contracts are reviewed.
-- Do not commit secrets, API keys, user data, or production credentials.
-- Public interfaces, security decisions, and non-obvious implementation choices must be documented.
+Validation is not authorization. Callers must authorize workflow creation and execution separately, and the orchestration layer must enforce runtime limits and approval gates.
 
-## Documentation
+## Development
 
-- [Project specification](docs/PROJECT_SPEC.md)
-- [Architecture and connections](docs/ARCHITECTURE.md)
-- [Dependencies and contracts](docs/DEPENDENCIES_AND_CONTRACTS.md)
-- [Implementation plan and acceptance criteria](docs/IMPLEMENTATION_PLAN.md)
-- [Research and license notes](docs/RESEARCH_AND_LICENSES.md)
-- [Repository-specific technical design and test plan](docs/TECHNICAL_DESIGN.md)
-- [Repository-specific security review checklist](docs/SECURITY_REVIEW.md)
-- [Engineering and commenting standard](docs/ENGINEERING_STANDARD.md)
-- [Work log and decisions](docs/WORKLOG.md)
-- [Master 33-repository catalog](https://github.com/Monupatel62/aether-ai-platform/blob/main/docs/REPOSITORY_CATALOG.md)
-- [Continuity handoff for new chats](https://github.com/Monupatel62/aether-ai-platform/blob/main/docs/WORK_HANDOFF.md)
+```bash
+npm install
+npm run typecheck
+npm test
+npm run build
+```
 
-## Before coding
-
-Read the project specification, architecture, contracts, implementation plan, and work log. Update the docs in the same change whenever behavior, an API contract, a dependency, or a security boundary changes.
+CI is configured for Node.js 20 and 22. Input/output schema compatibility, workflow migration, orchestration plan compatibility, and dependency/security audits remain future work.
