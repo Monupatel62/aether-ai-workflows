@@ -25,7 +25,7 @@ def validate_workflow(workflow: Any) -> list[str]:
     errors: list[str] = []
     if not isinstance(workflow, dict):
         return ["workflow must be a JSON object"]
-    if workflow.get("version") != 1:
+    if type(workflow.get("version")) is not int or workflow.get("version") != 1:
         errors.append("version must be integer 1")
 
     nodes = workflow.get("nodes")
