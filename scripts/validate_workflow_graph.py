@@ -14,6 +14,7 @@ No step kinds, persistence model, tenant owner, or execution policy are chosen h
 from __future__ import annotations
 
 import argparse
+import heapq
 import json
 import sys
 from pathlib import Path
@@ -78,16 +79,16 @@ def validate_workflow(workflow: Any) -> list[str]:
     for source in adjacency:
         for target in adjacency[source]:
             indegree[target] += 1
-    ready = sorted(node_id for node_id, degree in indegree.items() if degree == 0)
+    ready = [node_id for node_id, degree in indegree.items() if degree == 0]
+    heapq.heapify(ready)
     visited = 0
     while ready:
-        current = ready.pop(0)
+        current = heapq.heappop(ready)
         visited += 1
         for target in sorted(adjacency[current]):
             indegree[target] -= 1
             if indegree[target] == 0:
-                ready.append(target)
-                ready.sort()
+                heapq.heappush(ready, target)
     if visited != len(node_ids):
         errors.append("workflow graph contains a cycle")
 
