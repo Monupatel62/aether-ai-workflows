@@ -15,6 +15,9 @@ function deepFreeze(value) {
 
 /** Validate a data-only workflow definition. This does not execute any step. */
 export function validateWorkflowDefinition(input, { maxSteps = 100, maxEdges = 500, maxBytes = 1_048_576 } = {}) {
+  if (!Number.isSafeInteger(maxSteps) || maxSteps < 1 || maxSteps > 1000) throw new TypeError("maxSteps must be between 1 and 1000");
+  if (!Number.isSafeInteger(maxEdges) || maxEdges < 1 || maxEdges > 10_000) throw new TypeError("maxEdges must be between 1 and 10000");
+  if (!Number.isSafeInteger(maxBytes) || maxBytes < 1 || maxBytes > 10_485_760) throw new TypeError("maxBytes must be between 1 and 10485760");
   const issues = [];
   let encoded;
   try { encoded = JSON.stringify(input); } catch { throw new WorkflowValidationError(["definition must be JSON-serializable"]); }
