@@ -57,6 +57,20 @@ class WorkflowGraphValidatorTests(unittest.TestCase):
         edges = [{"from": f"n{i:04d}", "to": f"n{i + 1:04d}"} for i in range(1499)]
         self.assertEqual([], validate_workflow(workflow(nodes, edges)))
 
+    def test_rejects_malformed_node_and_edge_shapes(self):
+        errors = validate_workflow(workflow(
+            [{"id": "a", "kind": " "}], [{"from": "a", "to": 7}]
+        ))
+        self.assertIn("nodes[0].kind must be a non-empty string", errors)
+        self.assertIn("edges[0] must contain string 'from' and 'to' values", errors)
+
+    def test_reports_errors_deterministically(self):
+        definition = workflow(
+            [{"id": "a", "kind": "task"}],
+            [{"from": "missing", "to": "also-missing"}],
+        )
+        self.assertEqual(validate_workflow(definition), validate_workflow(definition))
+
     def test_rejects_non_object_input(self):
         self.assertEqual(["workflow must be a JSON object"], validate_workflow([]))
 
