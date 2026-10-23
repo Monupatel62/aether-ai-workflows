@@ -3,7 +3,12 @@ import unittest
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
-from validate_workflow_graph import validate_workflow
+from validate_workflow_graph import (
+    MAX_EDGES,
+    MAX_ID_CHARS,
+    MAX_NODES,
+    validate_workflow,
+)
 
 
 def workflow(nodes, edges):
@@ -73,6 +78,42 @@ class WorkflowGraphValidatorTests(unittest.TestCase):
 
     def test_rejects_non_object_input(self):
         self.assertEqual(["workflow must be a JSON object"], validate_workflow([]))
+
+    def test_rejects_duplicate_edges_without_double_counting(self):
+        errors = validate_workflow(workflow(
+            [{"id": "a", "kind": "task"}, {"id": "b", "kind": "task"}],
+            [{"from": "a", "to": "b"}, {"from": "a", "to": "b"}],
+        ))
+        self.assertTrue(any("duplicates edge" in error for error in errors))
+
+    def test_rejects_multiple_entry_nodes(self):
+        errors = validate_workflow(workflow(
+            [{"id": "a", "kind": "task"}, {"id": "b", "kind": "task"}], []
+        ))
+        self.assertIn("workflow graph must have exactly one entry node", errors)
+
+    def test_rejects_excessive_node_count(self):
+        nodes = [{"id": f"n{i}", "kind": "task"} for i in range(MAX_NODES + 1)]
+        errors = validate_workflow(workflow(nodes, []))
+        self.assertTrue(any("nodes exceeds the draft limit" in error for error in errors))
+
+    def test_rejects_excessive_edge_count(self):
+        nodes = [{"id": "a", "kind": "task"}, {"id": "b", "kind": "task"}]
+        edges = [{"from": "a", "to": "b"}] * (MAX_EDGES + 1)
+        errors = validate_workflow(workflow(nodes, edges))
+        self.assertTrue(any("edges exceeds the draft limit" in error for error in errors))
+        self.assertTrue(any("duplicates edge" in error for error in errors))
+
+    def test_rejects_oversized_node_id(self):
+        long_id = "n" * (MAX_ID_CHARS + 1)
+        errors = validate_workflow(workflow([{"id": long_id, "kind": "task"}], []))
+        self.assertTrue(any("id exceeds" in error for error in errors))
+
+    def test_rejects_blank_edge_endpoints(self):
+        errors = validate_workflow(workflow(
+            [{"id": "a", "kind": "task"}], [{"from": " ", "to": "a"}]
+        ))
+        self.assertTrue(any("unknown node" in error for error in errors))
 
 
 if __name__ == "__main__":
