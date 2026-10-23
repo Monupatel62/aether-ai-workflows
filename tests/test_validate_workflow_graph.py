@@ -1,5 +1,4 @@
 import sys
-import tempfile
 import unittest
 from pathlib import Path
 
@@ -53,6 +52,5 @@ class WorkflowGraphValidatorTests(unittest.TestCase):
         self.assertEqual(["workflow must be a JSON object"], validate_workflow([]))
 
 
-if __
-name__ == "__main__":
+if __name__ == "__main__":
     unittest.main()
