@@ -1,39 +1,23 @@
 # aether-ai-workflows
 
-> **Status: Documentation phase.** No application code or production deployment has been started in this repository.
+**Status:** Initial versioned workflow-definition validator implemented on a feature branch. Workflow execution is not implemented.
 
-## Purpose
+## Implemented
 
-Declarative multi-step workflow definitions, validation, versioning, scheduling hooks, and run state.
+- [Workflow validator](src/index.js): schema version check, bounded step/edge/payload counts, unique identifiers, known step kinds, dependency-reference checks, self-edge/duplicate-edge checks, cycle detection, and immutable normalized output.
+- [Unit tests](test/workflows.test.js): valid DAG, bad versions, duplicate IDs, unknown dependencies, cycles, invalid kinds/config, and size limits.
+- Dependency-free Node.js package with Node 20/22 CI.
 
-## Responsibility boundary
+## Boundaries
 
-Defines workflow graphs; delegates execution to orchestration and agents.
-
-## Dependencies
-
-aether-ai-orchestration, aether-ai-agents, aether-ai-queue, aether-ai-database.
-
-## Project rules
-
-- No implementation starts until the documentation and cross-repository contracts are reviewed.
-- Do not commit secrets, API keys, user data, or production credentials.
-- Public interfaces, security decisions, and non-obvious implementation choices must be documented.
+This package validates data-only workflow definitions. It does not schedule steps, run agents/tools, persist workflow state, resolve secrets, or define durable retries/cancellation. Those responsibilities belong to orchestration and policy-enforced tool execution.
 
 ## Documentation
 
+- [Repository specification](docs/REPOSITORY_SPECIFICATION.md)
 - [Project specification](docs/PROJECT_SPEC.md)
-- [Architecture and connections](docs/ARCHITECTURE.md)
+- [Architecture](docs/ARCHITECTURE.md)
 - [Dependencies and contracts](docs/DEPENDENCIES_AND_CONTRACTS.md)
-- [Implementation plan and acceptance criteria](docs/IMPLEMENTATION_PLAN.md)
-- [Research and license notes](docs/RESEARCH_AND_LICENSES.md)
-- [Repository-specific technical design and test plan](docs/TECHNICAL_DESIGN.md)
-- [Repository-specific security review checklist](docs/SECURITY_REVIEW.md)
-- [Engineering and commenting standard](docs/ENGINEERING_STANDARD.md)
-- [Work log and decisions](docs/WORKLOG.md)
-- [Master 33-repository catalog](https://github.com/Monupatel62/aether-ai-platform/blob/main/docs/REPOSITORY_CATALOG.md)
-- [Continuity handoff for new chats](https://github.com/Monupatel62/aether-ai-platform/blob/main/docs/WORK_HANDOFF.md)
-
-## Before coding
-
-Read the project specification, architecture, contracts, implementation plan, and work log. Update the docs in the same change whenever behavior, an API contract, a dependency, or a security boundary changes.
+- [Implementation plan](docs/IMPLEMENTATION_PLAN.md)
+- [Security review](docs/SECURITY_REVIEW.md)
+- [Master catalog](https://github.com/Monupatel62/aether-ai-platform/blob/main/docs/REPOSITORY_CATALOG.md)
