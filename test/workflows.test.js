@@ -39,3 +39,10 @@ test("enforces graph and payload limits", () => {
   assert.throws(() => validateWorkflowDefinition(valid, { maxSteps: 2 }), WorkflowValidationError);
   assert.throws(() => validateWorkflowDefinition(valid, { maxBytes: 10 }), WorkflowValidationError);
 });
+
+
+test("rejects unsafe validator limit configuration", () => {
+  assert.throws(() => validateWorkflowDefinition(valid, { maxSteps: 0 }), /maxSteps/);
+  assert.throws(() => validateWorkflowDefinition(valid, { maxEdges: 10001 }), /maxEdges/);
+  assert.throws(() => validateWorkflowDefinition(valid, { maxBytes: 20_000_000 }), /maxBytes/);
+});
