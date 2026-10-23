@@ -52,6 +52,11 @@ class WorkflowGraphValidatorTests(unittest.TestCase):
         errors = validate_workflow({"version": True, "nodes": [{"id": "a", "kind": "task"}], "edges": []})
         self.assertIn("version must be integer 1", errors)
 
+    def test_accepts_large_linear_graph(self):
+        nodes = [{"id": f"n{i:04d}", "kind": "task"} for i in range(1500)]
+        edges = [{"from": f"n{i:04d}", "to": f"n{i + 1:04d}"} for i in range(1499)]
+        self.assertEqual([], validate_workflow(workflow(nodes, edges)))
+
     def test_rejects_non_object_input(self):
         self.assertEqual(["workflow must be a JSON object"], validate_workflow([]))
 
