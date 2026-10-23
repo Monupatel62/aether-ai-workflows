@@ -1,7 +1,9 @@
 import type { WorkflowDefinitionV1 } from "./types.js";
 
 export type WorkflowIssueCode =
+  | "invalid_schema_version"
   | "invalid_id"
+  | "invalid_node_kind"
   | "empty_nodes"
   | "too_many_nodes"
   | "duplicate_node"
@@ -37,6 +39,7 @@ export function validateWorkflow(
   const maxTimeoutMs = options.maxTimeoutMs ?? 10 * 60 * 1000;
   const maxAttempts = options.maxAttempts ?? 5;
 
+  if (workflow.schemaVersion !== "1") issues.push({ code: "invalid_schema_version", path: "/schemaVersion" });
   if (!/^[a-zA-Z0-9][a-zA-Z0-9._-]{0,127}$/.test(workflow.id) ||
       !/^[a-zA-Z0-9][a-zA-Z0-9._+-]{0,63}$/.test(workflow.version)) {
     issues.push({ code: "invalid_id", path: "/" });
@@ -57,6 +60,9 @@ export function validateWorkflow(
     if (nodeIds.has(node.id)) issues.push({ code: "duplicate_node", path: `${path}/id` });
     nodeIds.add(node.id);
     adjacency.set(node.id, []);
+    if (!(["agent", "tool", "condition", "approval", "transform"] as readonly string[]).includes(node.kind)) {
+      issues.push({ code: "invalid_node_kind", path: `${path}/kind` });
+    }
     if (!Number.isInteger(node.timeoutMs) || node.timeoutMs < 1 || node.timeoutMs > maxTimeoutMs) {
       issues.push({ code: "invalid_timeout", path: `${path}/timeoutMs` });
     }
@@ -64,7 +70,7 @@ export function validateWorkflow(
       issues.push({ code: "invalid_attempts", path: `${path}/maxAttempts` });
     }
     for (const [refIndex, ref] of (node.secretRefs ?? []).entries()) {
-      if (!/^[a-zA-Z0-9][a-zA-Z0-9._:/-]{0,255}$/.test(ref)) {
+      if (!/^secret:\/\/[a-zA-Z0-9][a-zA-Z0-9._:/-]{0,247}$/.test(ref)) {
         issues.push({ code: "invalid_secret_ref", path: `${path}/secretRefs/${refIndex}` });
       }
     }
