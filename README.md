@@ -12,7 +12,7 @@ Defines workflow graphs; delegates execution to orchestration and agents.
 
 ## Dependencies
 
-aether-ai-orchestration, aether-ai-agents, aether-ai-queue, aether-ai-database.
+The versioned workflow-definition and validation contract is consumed by `aether-ai-orchestration`. No runtime dependency on orchestration, agents, queue, or database; durable scheduling and run state are owned by orchestration.
 
 ## Project rules
 
@@ -23,6 +23,8 @@ aether-ai-orchestration, aether-ai-agents, aether-ai-queue, aether-ai-database.
 ## Documentation
 
 - [Project specification](docs/PROJECT_SPEC.md)
+- [Graph validator (draft structural utility)](scripts/validate_workflow_graph.py)
+- [Graph validator tests](tests/test_validate_workflow_graph.py)
 - [Architecture and connections](docs/ARCHITECTURE.md)
 - [Dependencies and contracts](docs/DEPENDENCIES_AND_CONTRACTS.md)
 - [Implementation plan and acceptance criteria](docs/IMPLEMENTATION_PLAN.md)
