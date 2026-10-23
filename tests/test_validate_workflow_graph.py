@@ -48,6 +48,10 @@ class WorkflowGraphValidatorTests(unittest.TestCase):
         self.assertIn("version must be integer 1", errors)
         self.assertIn("nodes must be a non-empty array", errors)
 
+    def test_rejects_boolean_version(self):
+        errors = validate_workflow({"version": True, "nodes": [{"id": "a", "kind": "task"}], "edges": []})
+        self.assertIn("version must be integer 1", errors)
+
     def test_rejects_non_object_input(self):
         self.assertEqual(["workflow must be a JSON object"], validate_workflow([]))
 
