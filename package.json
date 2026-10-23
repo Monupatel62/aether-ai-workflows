@@ -1,0 +1,10 @@
+{
+  "name": "@aether-ai/workflows",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Versioned workflow definition validation and graph analysis.",
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "exports": { ".": "./src/index.js" },
+  "scripts": { "test": "node --test", "check": "node --check src/index.js && node --check test/workflows.test.js" }
+}
